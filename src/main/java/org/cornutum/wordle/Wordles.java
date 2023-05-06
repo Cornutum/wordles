@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Analyzes a set of Wordle word choices.
@@ -23,9 +26,25 @@ public class Wordles
   /**
    * Creates a new Wordles object.
    */
-  private Wordles()
+  public Wordles()
     {
-    // Static methods only
+    this( null);
+    }
+  
+  /**
+   * Creates a new Wordles object.
+   */
+  public Wordles( List<String> words)
+    {
+    words_ = Optional.ofNullable( words).orElse( emptyList()).stream().collect( toList());
+    }
+
+  /**
+   * Returns the word list to be analyzed.
+   */
+  public List<String> getWords()
+    {
+    return words_;
     }
 
   /**
@@ -45,7 +64,8 @@ public class Wordles
         {
         try( BufferedReader reader = wordReader( args.length == 1 ? args[0] : null))
           {
-          List<String> words = readWords( reader);
+          Wordles wordles = new Wordles( readWords( reader));
+          List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups();
           }
         }
       }
@@ -58,6 +78,32 @@ public class Wordles
       {
       System.exit( exitCode);
       }
+    }
+
+  /**
+   * Returns the word pattern groups for each member of this word list.
+   */
+  public List<WordPatternGroups> getWordPatternGroups()
+    {
+    return
+      getWords().stream()
+      .map( word -> getWordPatternGroups( word))
+      .collect( toList());
+    }
+
+  /**
+   * Returns the word pattern groups for the given guess
+   */
+  protected WordPatternGroups getWordPatternGroups( String guess)
+    {
+    WordPatternGroups groups = new WordPatternGroups( guess);
+
+    for( String word : getWords())
+      {
+      groups.addPattern( word);
+      }
+    
+    return groups;
     }
 
   /**
@@ -101,4 +147,6 @@ public class Wordles
         ? new InputStreamReader( System.in)
         : new FileReader( wordFile));
     }
+
+  private final List<String> words_;
   }
