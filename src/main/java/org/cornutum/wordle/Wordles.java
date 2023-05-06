@@ -62,11 +62,8 @@ public class Wordles
         }
       else
         {
-        try( BufferedReader reader = wordReader( args.length == 1 ? args[0] : null))
-          {
-          Wordles wordles = new Wordles( readWords( reader));
-          List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups();
-          }
+        Wordles wordles = new Wordles( readWords( Optional.ofNullable( args.length == 1 ? args[0] : null)));
+        List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups(); 
         }
       }
     catch( Throwable e)
@@ -88,6 +85,7 @@ public class Wordles
     return
       getWords().stream()
       .map( word -> getWordPatternGroups( word))
+      .sorted()
       .collect( toList());
     }
 
@@ -109,7 +107,18 @@ public class Wordles
   /**
    * Reads a list of words.
    */
-  protected static List<String> readWords( BufferedReader reader) throws IOException
+  protected static List<String> readWords( Optional<String> wordFile) throws IOException
+    {
+    try( BufferedReader reader = wordReader( wordFile))
+      {
+      return readWords( reader);
+      }
+    }
+
+  /**
+   * Reads a list of words.
+   */
+  private static List<String> readWords( BufferedReader reader) throws IOException
     {
     List<String> words = new ArrayList<String>();
 
@@ -139,13 +148,13 @@ public class Wordles
   /**
    * Returns a reader for the contents of the given word file
    */
-  protected static BufferedReader wordReader( String wordFile) throws IOException
+  private static BufferedReader wordReader( Optional<String> wordFile) throws IOException
     {
     return
       new BufferedReader(
-        wordFile == null
-        ? new InputStreamReader( System.in)
-        : new FileReader( wordFile));
+        wordFile.isPresent()
+        ? new FileReader( wordFile.get())
+        : new InputStreamReader( System.in));
     }
 
   private final List<String> words_;

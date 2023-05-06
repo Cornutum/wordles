@@ -13,6 +13,8 @@ import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Optional;
+
 import static java.util.Collections.emptyList;
 
 /**
@@ -29,7 +31,7 @@ public class WordReaderTest extends BaseTest
     // When...
     runWithStdIO(
       () -> {
-      assertThat( "Words", Wordles.readWords( Wordles.wordReader( null)), is( emptyList()));
+      assertThat( "Words", Wordles.readWords( Optional.empty()), is( emptyList()));
       },
       words,
       null);
@@ -46,7 +48,7 @@ public class WordReaderTest extends BaseTest
       () -> {
       assertThat(
         "Words",
-        Wordles.readWords( Wordles.wordReader( null)),
+        Wordles.readWords( Optional.empty()),
         is( Arrays.asList( "SHINY", "WORDS", "COULD", "HOVER", "UNTIL", "EVERY", "WOMAN", "LANDS")));
       },
       words,
@@ -64,7 +66,7 @@ public class WordReaderTest extends BaseTest
       () -> {
       assertThat(
         "Words",
-        Wordles.readWords( Wordles.wordReader( words.getPath())),
+        Wordles.readWords( Optional.of( words.getPath())),
         is( Arrays.asList( "BELOW", "LOVED", "HOVEL", "VOWEL", "BOWEL", "DOWEL", "YODEL", "MODEL", "YOKEL")));
       },
       words,
