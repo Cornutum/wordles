@@ -7,6 +7,7 @@
 
 package org.cornutum.wordle;
 
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +16,7 @@ import java.util.Set;
 /**
  * Defines a set of pattern groups for specified guess word.
  */
-public class WordPatternGroups
+public class WordPatternGroups implements Comparable<WordPatternGroups>
   {
   /**
    * Creates a new WordPatternGroups instance.
@@ -50,6 +51,14 @@ public class WordPatternGroups
     }
 
   /**
+   * Compares {@link WordPatternGroups} instances.
+   */
+  public int compareTo( WordPatternGroups other)
+    {
+    return bySize.reversed().thenComparing( byVariance).compare( this, other);
+    }
+
+  /**
    * Adds the given word to the group for the given pattern.
    */
   private void addPatternWord( WordPattern pattern, String word)
@@ -59,6 +68,29 @@ public class WordPatternGroups
     getGroups().put( pattern, patternWords);
     }
 
+  /**
+   * Returns the variance in group size for all patterns.
+   */
+  private Double getVariance()
+    {
+    final double avgSize =
+      getGroups().values().stream()
+      .mapToDouble( words -> (double) words.size())
+      .average()
+      .orElse( 0.0);
+
+    return
+      getGroups().values().stream()
+      .mapToDouble( words -> (double) words.size())
+      .map( size -> Math.pow( size - avgSize, 2))
+      .sum()
+      / getGroups().size();
+    }
+
   private final String guess_;
   private Map<WordPattern,Set<String>> groups_;
+
+  private static final Comparator<WordPatternGroups> bySize = Comparator.comparing( wpg -> wpg.getGroups().size());
+  private static final Comparator<WordPatternGroups> byVariance = Comparator.comparing( wpg -> wpg.getVariance());
+
   }
