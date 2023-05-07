@@ -99,4 +99,18 @@ public class WordPatternTest
     // Then...
     assertThat( "Pattern", String.valueOf( pattern), is( "ooooo"));
     }
+  
+  @Test
+  public void whenGuessMultipleMixed()
+    {
+    // Given...
+    String target = "BUMPY";
+    String guess  = "GUPPY";
+    
+    // When...
+    WordPattern pattern = WordPattern.patternFor( target, guess);
+
+    // Then...
+    assertThat( "Pattern", String.valueOf( pattern), is( "_*_**"));
+    }
   }
