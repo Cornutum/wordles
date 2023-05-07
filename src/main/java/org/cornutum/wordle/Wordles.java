@@ -11,6 +11,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +65,33 @@ public class Wordles
         }
       else
         {
-        Wordles wordles = new Wordles( readWords( Optional.ofNullable( args.length == 1 ? args[0] : null)));
-        List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups(); 
+        Optional<String> wordFile = Optional.ofNullable( args.length == 1 ? args[0] : null);
+        Wordles wordles = new Wordles( readWords( wordFile));
+        List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups();
+        if( !wordGroups.isEmpty())
+          {
+          wordles.printWordPatternGroups( wordGroups.get(0));
+
+          if( wordFile.isPresent())
+            {
+            PrintWriter prompter = new PrintWriter( new OutputStreamWriter( System.out), true);
+            BufferedReader reader = new BufferedReader( new InputStreamReader( System.in));
+            boolean showMore = true;
+            while( showMore)
+              {
+              prompter.print( "\nNext guess? ");
+              prompter.flush();
+
+              Optional<String> nextGuess =
+                Optional.ofNullable( reader.readLine())
+                .map( String::trim)
+                .filter( guess -> !guess.isEmpty());
+
+              nextGuess.ifPresent( guess -> wordles.printWordPatternGroups( guess));
+              showMore = nextGuess.isPresent();            
+              }
+            }
+          }
         }
       }
     catch( Throwable e)
@@ -75,6 +103,52 @@ public class Wordles
       {
       System.exit( exitCode);
       }
+    }
+
+  /**
+   * Prints the word pattern groups for the given guess to standard output
+   */
+  public void printWordPatternGroups( String guess)
+    {
+    WordPatternGroups patternGroups = getWordPatternGroups( guess.trim().toUpperCase());
+    if( patternGroups == null)
+      {
+      System.out.println( String.format( "No pattern groups found for '%s'", guess));
+      }
+    else
+      {
+      printWordPatternGroups( patternGroups, new OutputStreamWriter( System.out));
+      }
+    }
+
+  /**
+   * Prints the given word pattern groups to standard output
+   */
+  public void printWordPatternGroups( WordPatternGroups patternGroups)
+    {
+    printWordPatternGroups( patternGroups, new OutputStreamWriter( System.out));
+    }
+
+  /**
+   * Prints the given word pattern groups to the given stream.
+   */
+  public void printWordPatternGroups( WordPatternGroups patternGroups, Writer stream)
+    {
+    PrintWriter writer = new PrintWriter( stream, true);
+    writer.println();
+    writer.println();
+    writer.println( String.format( "%s (%.3f)", patternGroups.getGuess(), patternGroups.getVariance()));
+    writer.println( "----------------");
+    patternGroups.getGroups().entrySet().stream()
+      .sorted( (e1, e2) -> e2.getValue().size() - e1.getValue().size())
+      .forEach( e -> {
+        writer.println();
+        writer.println( String.format( "  %s", e.getKey()));
+        for( String word : e.getValue())
+          {
+          writer.println( String.format( "    %s", word));
+          }
+        });
     }
 
   /**
