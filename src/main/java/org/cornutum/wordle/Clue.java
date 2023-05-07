@@ -14,9 +14,9 @@ import java.util.Optional;
  */
 public enum Clue
   {
-    GREEN( "*"),
-    YELLOW( "o"),
-    BLACK( "_");
+    GREEN( "G"),
+    YELLOW( "y"),
+    BLACK( ".");
 
     Clue( String text)
       {
@@ -32,13 +32,13 @@ public enum Clue
       {
       return
         Optional.ofNullable(
-          c == '*'?
+          c == 'G'?
           GREEN :
 
-          c == 'o'?
+          c == 'y'?
           YELLOW :
           
-          c == '_'?
+          c == '.'?
           BLACK :
           
           null)

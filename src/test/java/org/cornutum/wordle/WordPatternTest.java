@@ -27,7 +27,7 @@ public class WordPatternTest
     WordPattern pattern = WordPattern.patternFor( target, guess);
 
     // Then...
-    assertThat( "Pattern", String.valueOf( pattern), is( "_____"));
+    assertThat( "Pattern", String.valueOf( pattern), is( "....."));
     }
   
   @Test
@@ -41,7 +41,7 @@ public class WordPatternTest
     WordPattern pattern = WordPattern.patternFor( target, guess);
 
     // Then...
-    assertThat( "Pattern", String.valueOf( pattern), is( "_o__*"));
+    assertThat( "Pattern", String.valueOf( pattern), is( ".y..G"));
     }
   
   @Test
@@ -55,7 +55,7 @@ public class WordPatternTest
     WordPattern pattern = WordPattern.patternFor( target, guess);
 
     // Then...
-    assertThat( "Pattern", String.valueOf( pattern), is( "o___*"));
+    assertThat( "Pattern", String.valueOf( pattern), is( "y...G"));
     }
   
   @Test
@@ -69,7 +69,7 @@ public class WordPatternTest
     WordPattern pattern = WordPattern.patternFor( target, guess);
 
     // Then...
-    assertThat( "Pattern", String.valueOf( pattern), is( "_ooo_"));
+    assertThat( "Pattern", String.valueOf( pattern), is( ".yyy."));
     }
   
   @Test
@@ -83,7 +83,7 @@ public class WordPatternTest
     WordPattern pattern = WordPattern.patternFor( target, guess);
 
     // Then...
-    assertThat( "Pattern", String.valueOf( pattern), is( "*****"));
+    assertThat( "Pattern", String.valueOf( pattern), is( "GGGGG"));
     }
   
   @Test
@@ -97,7 +97,7 @@ public class WordPatternTest
     WordPattern pattern = WordPattern.patternFor( target, guess);
 
     // Then...
-    assertThat( "Pattern", String.valueOf( pattern), is( "ooooo"));
+    assertThat( "Pattern", String.valueOf( pattern), is( "yyyyy"));
     }
   
   @Test
@@ -111,6 +111,6 @@ public class WordPatternTest
     WordPattern pattern = WordPattern.patternFor( target, guess);
 
     // Then...
-    assertThat( "Pattern", String.valueOf( pattern), is( "_*_**"));
+    assertThat( "Pattern", String.valueOf( pattern), is( ".G.GG"));
     }
   }

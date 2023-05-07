@@ -57,24 +57,24 @@ public class WordlesTest extends BaseTest
       bestPatterns,
       containsMembers(
         Arrays.asList(
-          "_oo__",
-          "_*__*",
-          "_****",
-          "o*__*",
-          "**__*",
-          "*****",
-          "_ooo_",
-          "_*_**",
-          "_o__*")));
+          ".yy..",
+          ".G..G",
+          ".GGGG",
+          "yG..G",
+          "GG..G",
+          "GGGGG",
+          ".yyy.",
+          ".G.GG",
+          ".y..G")));
 
-    assertThat( "_oo__", best.getGroups().get( WordPattern.valueOf( "_oo__")), containsMembers( Arrays.asList( "UNZIP")));
-    assertThat( "_*__*", best.getGroups().get( WordPattern.valueOf( "_*__*")), containsMembers( Arrays.asList( "BUNNY", "FUNNY", "MUMMY")));
-    assertThat( "_****", best.getGroups().get( WordPattern.valueOf( "_****")), containsMembers( Arrays.asList( "PUPPY")));
-    assertThat( "o*__*", best.getGroups().get( WordPattern.valueOf( "o*__*")), containsMembers( Arrays.asList( "BUGGY")));
-    assertThat( "**__*", best.getGroups().get( WordPattern.valueOf( "**__*")), containsMembers( Arrays.asList( "GUMMY")));
-    assertThat( "*****", best.getGroups().get( WordPattern.valueOf( "*****")), containsMembers( Arrays.asList( "GUPPY")));
-    assertThat( "_ooo_", best.getGroups().get( WordPattern.valueOf( "_ooo_")), containsMembers( Arrays.asList( "PINUP")));
-    assertThat( "_*_**", best.getGroups().get( WordPattern.valueOf( "_*_**")), containsMembers( Arrays.asList( "BUMPY", "JUMPY")));
-    assertThat( "_o__*", best.getGroups().get( WordPattern.valueOf( "_o__*")), containsMembers( Arrays.asList( "UNIFY")));
+    assertThat( ".yy..", best.getGroups().get( WordPattern.valueOf( ".yy..")), containsMembers( Arrays.asList( "UNZIP")));
+    assertThat( ".G..G", best.getGroups().get( WordPattern.valueOf( ".G..G")), containsMembers( Arrays.asList( "BUNNY", "FUNNY", "MUMMY")));
+    assertThat( ".GGGG", best.getGroups().get( WordPattern.valueOf( ".GGGG")), containsMembers( Arrays.asList( "PUPPY")));
+    assertThat( "yG..G", best.getGroups().get( WordPattern.valueOf( "yG..G")), containsMembers( Arrays.asList( "BUGGY")));
+    assertThat( "GG..G", best.getGroups().get( WordPattern.valueOf( "GG..G")), containsMembers( Arrays.asList( "GUMMY")));
+    assertThat( "GGGGG", best.getGroups().get( WordPattern.valueOf( "GGGGG")), containsMembers( Arrays.asList( "GUPPY")));
+    assertThat( ".yyy.", best.getGroups().get( WordPattern.valueOf( ".yyy.")), containsMembers( Arrays.asList( "PINUP")));
+    assertThat( ".G.GG", best.getGroups().get( WordPattern.valueOf( ".G.GG")), containsMembers( Arrays.asList( "BUMPY", "JUMPY")));
+    assertThat( ".y..G", best.getGroups().get( WordPattern.valueOf( ".y..G")), containsMembers( Arrays.asList( "UNIFY")));
     }
   }
