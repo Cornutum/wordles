@@ -37,16 +37,16 @@ public class WordlesTest extends BaseTest
       guesses,
       listsMembers(
         Arrays.asList(
+          "GUPPY",
           "BUMPY",
           "GUMMY",
-          "GUPPY",
-          "JUMPY",
           "PINUP",
-          "UNZIP",
-          "BUGGY",
+          "JUMPY",
           "BUNNY",
-          "MUMMY",
           "PUPPY",
+          "BUGGY",
+          "UNZIP",
+          "MUMMY",
           "FUNNY",
           "UNIFY")));
 
@@ -57,24 +57,24 @@ public class WordlesTest extends BaseTest
       bestPatterns,
       containsMembers(
         Arrays.asList(
-          "o___o",
-          "o___*",
-          "*****",
-          "_*_**",
-          "o__o_",
+          "_oo__",
           "_*__*",
           "_****",
+          "o*__*",
           "**__*",
-          "_**_*")));
+          "*****",
+          "_ooo_",
+          "_*_**",
+          "_o__*")));
 
-    assertThat( "o___o", best.getGroups().get( WordPattern.valueOf( "o___o")), containsMembers( Arrays.asList( "UNZIP")));
-    assertThat( "o___*", best.getGroups().get( WordPattern.valueOf( "o___*")), containsMembers( Arrays.asList( "UNIFY")));
-    assertThat( "*****", best.getGroups().get( WordPattern.valueOf( "*****")), containsMembers( Arrays.asList( "BUMPY")));
-    assertThat( "_*_**", best.getGroups().get( WordPattern.valueOf( "_*_**")), containsMembers( Arrays.asList( "GUPPY", "PUPPY")));
-    assertThat( "o__o_", best.getGroups().get( WordPattern.valueOf( "o__o_")), containsMembers( Arrays.asList( "PINUP")));
-    assertThat( "_*__*", best.getGroups().get( WordPattern.valueOf( "_*__*")), containsMembers( Arrays.asList( "FUNNY")));
-    assertThat( "_****", best.getGroups().get( WordPattern.valueOf( "_****")), containsMembers( Arrays.asList( "JUMPY")));
-    assertThat( "**__*", best.getGroups().get( WordPattern.valueOf( "**__*")), containsMembers( Arrays.asList( "BUGGY", "BUNNY")));
-    assertThat( "_**_*", best.getGroups().get( WordPattern.valueOf( "_**_*")), containsMembers( Arrays.asList( "GUMMY", "MUMMY")));
+    assertThat( "_oo__", best.getGroups().get( WordPattern.valueOf( "_oo__")), containsMembers( Arrays.asList( "UNZIP")));
+    assertThat( "_*__*", best.getGroups().get( WordPattern.valueOf( "_*__*")), containsMembers( Arrays.asList( "BUNNY", "FUNNY", "MUMMY")));
+    assertThat( "_****", best.getGroups().get( WordPattern.valueOf( "_****")), containsMembers( Arrays.asList( "PUPPY")));
+    assertThat( "o*__*", best.getGroups().get( WordPattern.valueOf( "o*__*")), containsMembers( Arrays.asList( "BUGGY")));
+    assertThat( "**__*", best.getGroups().get( WordPattern.valueOf( "**__*")), containsMembers( Arrays.asList( "GUMMY")));
+    assertThat( "*****", best.getGroups().get( WordPattern.valueOf( "*****")), containsMembers( Arrays.asList( "GUPPY")));
+    assertThat( "_ooo_", best.getGroups().get( WordPattern.valueOf( "_ooo_")), containsMembers( Arrays.asList( "PINUP")));
+    assertThat( "_*_**", best.getGroups().get( WordPattern.valueOf( "_*_**")), containsMembers( Arrays.asList( "BUMPY", "JUMPY")));
+    assertThat( "_o__*", best.getGroups().get( WordPattern.valueOf( "_o__*")), containsMembers( Arrays.asList( "UNIFY")));
     }
   }

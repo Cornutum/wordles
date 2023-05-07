@@ -50,7 +50,7 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
    */
   public void addPattern( String word)
     {
-    addPatternWord( WordPattern.patternFor( getGuess(), word), word);
+    addPatternWord( WordPattern.patternFor( word, getGuess()), word);
     }
 
   /**
@@ -96,7 +96,7 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
   /**
    * Returns the variance in group size for all patterns.
    */
-  public Double getVariance()
+  public Float getVariance()
     {
     final double avgSize =
       getGroups().values().stream()
@@ -105,6 +105,7 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
       .orElse( 0.0);
 
     return
+      (float)
       getGroups().values().stream()
       .mapToDouble( words -> (double) words.size())
       .map( size -> Math.pow( size - avgSize, 2))
