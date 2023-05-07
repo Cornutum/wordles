@@ -10,6 +10,7 @@ package org.cornutum.wordle;
 import static org.cornutum.wordle.Clue.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.stream.IntStream;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Defines matching pattern for a given guess.
@@ -51,10 +53,32 @@ public class WordPattern
     for( Integer guessChar : guessCharPos.keySet())
       {
       List<Integer> targetPos = Optional.ofNullable( targetCharPos.get( guessChar)).orElse( emptyList());
-      List<Integer> guessPos = guessCharPos.get( guessChar);
-      for( Integer pos : guessPos.subList( 0, Math.min( targetPos.size(), guessPos.size())))
+      int guessCharCount = targetPos.size();
+      if( guessCharCount > 0)
         {
-        clues[ pos] = targetPos.contains( pos)? GREEN : YELLOW;
+        List<Integer> guessPos = guessCharPos.get( guessChar);
+        Map<Clue,List<Integer>> guessClues = guessPos.stream().collect( groupingBy( pos -> targetPos.contains( pos)? GREEN : YELLOW));
+
+        List<Integer> greenPos = Optional.ofNullable( guessClues.get( GREEN)).orElse( emptyList());
+        for( int i = 0;
+
+             guessCharCount > 0
+               && i < greenPos.size();
+
+             clues[ greenPos.get(i)] = GREEN,
+               guessCharCount--,
+               i++);
+
+        List<Integer> yellowPos = Optional.ofNullable( guessClues.get( YELLOW)).orElse( emptyList());
+        Collections.sort( yellowPos);
+        for( int i = 0;
+
+             guessCharCount > 0
+               && i < yellowPos.size();
+
+             clues[ yellowPos.get(i)] = YELLOW,
+               guessCharCount--,
+               i++);
         }
       }
 
@@ -84,6 +108,18 @@ public class WordPattern
     {
     return clues_.stream().map( Clue::toString).collect( joining());
     }
-  
+
+  /**
+   * Returns the WordPattern represented by the given string.
+   */
+  public static WordPattern valueOf( String pattern)
+    {
+    return
+      new WordPattern(
+        IntStream.range( 0, pattern.length())
+        .mapToObj( i -> Clue.valueOf( pattern.charAt( i)))
+        .collect( toList()));
+    }
+
   private final List<Clue> clues_;
   }
