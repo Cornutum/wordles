@@ -110,15 +110,7 @@ public class Wordles
    */
   public void printWordPatternGroups( String guess)
     {
-    WordPatternGroups patternGroups = getWordPatternGroups( guess.trim().toUpperCase());
-    if( patternGroups == null)
-      {
-      System.out.println( String.format( "No pattern groups found for '%s'", guess));
-      }
-    else
-      {
-      printWordPatternGroups( patternGroups, new OutputStreamWriter( System.out));
-      }
+    printWordPatternGroups( getWordPatternGroups( guess.trim().toUpperCase()), new OutputStreamWriter( System.out));
     }
 
   /**
