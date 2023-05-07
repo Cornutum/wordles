@@ -8,10 +8,12 @@
 package org.cornutum.wordle;
 
 import java.util.Comparator;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
+import static java.util.stream.Collectors.joining;
 
 /**
  * Defines a set of pattern groups for specified guess word.
@@ -24,6 +26,7 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
   public WordPatternGroups( String guess)
     {
     guess_ = guess;
+    groups_ = new HashMap<WordPattern,Set<String>>();
     }
 
   /**
@@ -55,15 +58,37 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
    */
   public int compareTo( WordPatternGroups other)
     {
-    return bySize.reversed().thenComparing( byVariance).compare( this, other);
+    return
+      bySize.reversed()
+      .thenComparing( byVariance)
+      .thenComparing( byMaxGroup)
+      .thenComparing( byGuess)
+      .compare( this, other);
     }
 
+  public String toString()
+    {
+    return
+      new StringBuilder( getClass().getSimpleName())
+      .append( '[')
+      .append( getGuess())
+      .append( ',')
+      .append( String.format( "%.3f", getVariance()))
+      .append( ',')
+      .append(
+        getGroups().entrySet().stream()
+        .map( e -> String.format( "%s=%d", e.getKey(), e.getValue().size()))
+        .collect( joining( ",")))
+      .append( ']')
+      .toString();
+    }
+  
   /**
    * Adds the given word to the group for the given pattern.
    */
   private void addPatternWord( WordPattern pattern, String word)
     {
-    Set<String> patternWords = Optional.ofNullable( getGroups().get( pattern)).orElse( new LinkedHashSet<String>());
+    Set<String> patternWords = Optional.ofNullable( getGroups().get( pattern)).orElse( new TreeSet<String>());
     patternWords.add( word);
     getGroups().put( pattern, patternWords);
     }
@@ -71,7 +96,7 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
   /**
    * Returns the variance in group size for all patterns.
    */
-  private Double getVariance()
+  public Double getVariance()
     {
     final double avgSize =
       getGroups().values().stream()
@@ -83,14 +108,15 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
       getGroups().values().stream()
       .mapToDouble( words -> (double) words.size())
       .map( size -> Math.pow( size - avgSize, 2))
-      .sum()
-      / getGroups().size();
+      .average()
+      .orElse( 0.0);
     }
 
   private final String guess_;
-  private Map<WordPattern,Set<String>> groups_;
+  private final Map<WordPattern,Set<String>> groups_;
 
   private static final Comparator<WordPatternGroups> bySize = Comparator.comparing( wpg -> wpg.getGroups().size());
   private static final Comparator<WordPatternGroups> byVariance = Comparator.comparing( wpg -> wpg.getVariance());
-
+  private static final Comparator<WordPatternGroups> byMaxGroup = Comparator.comparing( wpg -> wpg.getGroups().values().stream().mapToInt( Set::size).max().orElse(0));
+  private static final Comparator<WordPatternGroups> byGuess = Comparator.comparing( wpg -> wpg.getGuess());
   }
