@@ -1,0 +1,12 @@
+#######################################################################
+#
+#                     Copyright 2023, Cornutum Project
+#                              www.cornutum.org
+# 
+#######################################################################
+
+binDir=`dirname "$0"`
+releaseDir=`cd "$binDir"/..; pwd`
+libDir=$releaseDir/lib
+
+java -cp $libDir/wordles-${project.version}.jar org.cornutum.wordle.Wordles "$@"
