@@ -38,7 +38,7 @@ public class WordPattern
    */
   public static WordPattern patternFor( String target, String guess)
     {
-    Clue[] clues = new Clue[]{ BLACK, BLACK, BLACK, BLACK, BLACK};
+    Clue[] clues = new Clue[]{ WHITE, WHITE, WHITE, WHITE, WHITE};
 
     Map<Integer,List<Integer>> targetCharPos =
       IntStream.range( 0, 5)

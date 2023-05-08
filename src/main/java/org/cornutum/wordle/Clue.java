@@ -16,7 +16,7 @@ public enum Clue
   {
     GREEN( "G"),
     YELLOW( "y"),
-    BLACK( ".");
+    WHITE( ".");
 
     Clue( String text)
       {
@@ -39,7 +39,7 @@ public enum Clue
           YELLOW :
           
           c == '.'?
-          BLACK :
+          WHITE :
           
           null)
         
