@@ -24,7 +24,7 @@ public class WordlesTest extends BaseTest
   public void whenWordIsGuppy() throws Exception
     {
     // Given...
-    List<String> words = Wordles.readWords( Optional.of( getResourceFile( "words-guppy.txt").getPath()));
+    List<String> words = Wordles.readWords( Optional.of( getResourceFile( "words-guppy.txt")));
     Wordles wordles = new Wordles( words);
 
     // When...

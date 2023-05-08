@@ -8,6 +8,7 @@
 package org.cornutum.wordle;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,6 +27,222 @@ import static java.util.stream.Collectors.toList;
  */
 public class Wordles
   {
+  public static class Options
+    {
+    /**
+     * Creates a new Options object.
+     */
+    public Options()
+      {
+      setInteractive( false);
+      setPrintAll( false);
+      }
+
+    /**
+     * Creates a new Options object.
+     */
+    public Options( String[] args)
+      {
+      this();
+
+      int i;
+
+      // Handle options
+      for( i = 0; i < args.length && args[i].charAt(0) == '-'; i = handleOption( args, i));
+
+      // Handle additional arguments.
+      handleArgs( args, i);
+      }
+
+    /**
+     * Handles the i'th option and return the index of the next argument.
+     */
+    protected int handleOption( String[] args, int i)
+      {
+      String arg = args[i];
+
+      if( arg.equals( "-help"))
+        {
+        throwHelpException();
+        }
+
+      else if( arg.equals( "-i"))
+        {
+        setInteractive( true);
+        }
+
+      else if( arg.equals( "-a"))
+        {
+        setPrintAll( true);
+        }
+
+      else
+        {
+        throwUsageException( String.format( "Unknown option: %s", arg));
+        }
+
+      return i + 1;
+      }
+
+    /**
+     * Handles the non-option arguments i, i+1, ...
+     */
+    protected void handleArgs( String[] args, int i)
+      {
+      int nargs = args.length - i;
+
+      if( nargs > 1)
+        {
+        throwUsageException( String.format( "Unexpected argument: %s", args[i+1]));
+        }
+
+      if( nargs > 0)
+        {
+        setWordFile( new File( args[i]));
+        }
+      }
+
+    /**
+     * Throws a HelpException after printing usage information to standard error.
+     */
+    protected void throwHelpException()
+      {
+      printUsage();
+      throw new HelpException();
+      }
+
+    /**
+     * Prints usage information to standard error.
+     */
+    protected void printUsage()
+      {
+      for( String line :
+             new String[] {
+               "Usage: wordles [option...] [wordFile]",
+               "",
+               "Analyzes a set of Wordle guess words. If a wordFile is specified, reads guess words from",
+               "the given file. Otherwise, reads guess words from standard input",
+               "",
+               "Prints the results for the best guess to standard output. Results for other guesses can",
+               "also be printed, depending on the given options. For each guess, the results group input",
+               "words by the matching clues produced by this guess if the input word is the actual target.",
+               "Also shown is the variance in group size, which is used in the ranking.",
+               "",
+               "Each option is one of the following:",
+               "",
+               "  -i   Interactive mode. Prompts for a new guess word and prints its results. For an empty guess,",
+               "       prints the results of the next best guess from the input words. To quit, enter 'q'.",
+               "",
+               "  -a   Prints results for all input words in best-first order."
+             })
+        {
+        System.err.println( line);
+        }
+      }
+
+    /**
+     * Changes if interactive mode is enabled.
+     */
+    public void setInteractive( boolean enabled)
+      {
+      interactive_ = enabled;
+      }
+
+    /**
+     * Returns if interactive mode is enabled.
+     */
+    public boolean isInteractive()
+      {
+      return interactive_;
+      }
+
+    /**
+     * Changes if printing all results.
+     */
+    public void setPrintAll( boolean enabled)
+      {
+      printAll_ = enabled;
+      }
+
+    /**
+     * Returns if printing all results.
+     */
+    public boolean isPrintAll()
+      {
+      return printAll_;
+      }
+
+    /**
+     * Changes the file containing guess words.
+     */
+    public void setWordFile( File wordFile)
+      {
+      wordFile_ = wordFile;
+      }
+
+    /**
+     * Returns the file containing guess words.
+     */
+    public File getWordFile()
+      {
+      return wordFile_;
+      }
+
+    /**
+     * Throws a IllegalArgumentException reporting a command line error.
+     */
+    private static void throwUsageException( String detail)
+      {
+      throwUsageException( detail, null);
+      }
+
+    /**
+     * Throws a IllegalArgumentException reporting a command line error.
+     */
+    private static void throwUsageException( String detail, Exception cause)
+      {
+      throw getUsageException( detail, cause);
+      }
+
+    /**
+     * Returns an IllegalArgumentException reporting a command line error.
+     */
+    private static IllegalArgumentException getUsageException( String detail, Exception cause)
+      {
+      return
+        new IllegalArgumentException
+        ( "Invalid command line argument. For all command line details, use the -help option.",
+          new IllegalArgumentException( detail, cause));
+      }
+    
+    @Override
+    public String toString()
+      {
+      StringBuilder builder = new StringBuilder();
+
+      if( isInteractive())
+        {
+        builder.append( " -i");
+        }
+
+      if( isPrintAll())
+        {
+        builder.append( " -a");
+        }
+
+      if( getWordFile() != null)
+        {
+        builder.append( " ").append( getWordFile());
+        }
+      
+      return builder.toString();
+      }
+
+    private File wordFile_;
+    private boolean interactive_;
+    private boolean printAll_;
+    }
+  
   /**
    * Creates a new Wordles object.
    */
@@ -58,41 +275,11 @@ public class Wordles
     int exitCode = 0;
     try
       {
-      if( args.length > 1)
-        {
-        System.err.println( "Unexpected argument");
-        exitCode = 1;
-        }
-      else
-        {
-        Optional<String> wordFile = Optional.ofNullable( args.length == 1 ? args[0] : null);
-        Wordles wordles = new Wordles( readWords( wordFile));
-        List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups();
-        if( !wordGroups.isEmpty())
-          {
-          wordles.printWordPatternGroups( wordGroups.get(0));
-
-          if( wordFile.isPresent())
-            {
-            PrintWriter prompter = new PrintWriter( new OutputStreamWriter( System.out), true);
-            BufferedReader reader = new BufferedReader( new InputStreamReader( System.in));
-            boolean showMore = true;
-            while( showMore)
-              {
-              prompter.print( "\nNext guess? ");
-              prompter.flush();
-
-              Optional<String> nextGuess =
-                Optional.ofNullable( reader.readLine())
-                .map( String::trim)
-                .filter( guess -> !guess.isEmpty());
-
-              nextGuess.ifPresent( guess -> wordles.printWordPatternGroups( guess));
-              showMore = nextGuess.isPresent();            
-              }
-            }
-          }
-        }
+      run( new Options( args));
+      }
+    catch( HelpException h)
+      {
+      exitCode = 1;
       }
     catch( Throwable e)
       {
@@ -102,6 +289,60 @@ public class Wordles
     finally
       {
       System.exit( exitCode);
+      }
+    }
+
+  /**
+   * Analyzes a set of Wordle word choices, using the given options.
+   */
+  public static void run( Options options) throws Exception
+    {
+    Optional<File> wordFile = Optional.ofNullable( options.getWordFile());
+    Wordles wordles = new Wordles( readWords( wordFile));
+    List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups();
+    if( !wordGroups.isEmpty())
+      {
+      if( options.isPrintAll())
+        {
+        wordGroups.stream().forEach( wordGroup -> wordles.printWordPatternGroups( wordGroup));
+        }
+      else
+        {
+        int nextWord = 0;
+        wordles.printWordPatternGroups( wordGroups.get( nextWord++));
+
+        if( wordFile.isPresent() && options.isInteractive())
+          {
+          PrintWriter prompter = new PrintWriter( new OutputStreamWriter( System.out), true);
+          BufferedReader reader = new BufferedReader( new InputStreamReader( System.in));
+
+          boolean showMore = true;
+          while( showMore)
+            {
+            prompter.print( "\nNext guess? ");
+            prompter.flush();
+
+            String nextGuess =
+              Optional.ofNullable( reader.readLine())
+              .map( String::trim)
+              .filter( guess -> !guess.equalsIgnoreCase( "q"))
+              .orElse( null);
+
+            if( nextGuess == null || (nextGuess.isEmpty() && nextWord >= wordGroups.size()))
+              {
+              showMore = false;
+              }
+            else if( nextGuess.isEmpty())
+              {
+              wordles.printWordPatternGroups( wordGroups.get( nextWord++));
+              }
+            else
+              {
+              wordles.printWordPatternGroups( nextGuess);
+              } 
+            }
+          }
+        }
       }
     }
 
@@ -173,7 +414,7 @@ public class Wordles
   /**
    * Reads a list of words.
    */
-  protected static List<String> readWords( Optional<String> wordFile) throws IOException
+  protected static List<String> readWords( Optional<File> wordFile) throws IOException
     {
     try( BufferedReader reader = wordReader( wordFile))
       {
@@ -214,7 +455,7 @@ public class Wordles
   /**
    * Returns a reader for the contents of the given word file
    */
-  private static BufferedReader wordReader( Optional<String> wordFile) throws IOException
+  private static BufferedReader wordReader( Optional<File> wordFile) throws IOException
     {
     return
       new BufferedReader(

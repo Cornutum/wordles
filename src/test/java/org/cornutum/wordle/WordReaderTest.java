@@ -66,7 +66,7 @@ public class WordReaderTest extends BaseTest
       () -> {
       assertThat(
         "Words",
-        Wordles.readWords( Optional.of( words.getPath())),
+        Wordles.readWords( Optional.of( words)),
         is( Arrays.asList( "BELOW", "LOVED", "HOVEL", "VOWEL", "BOWEL", "DOWEL", "YODEL", "MODEL", "YOKEL")));
       },
       words,
