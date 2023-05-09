@@ -314,35 +314,43 @@ public class Wordles
         int nextWord = 0;
         wordles.printWordPatternGroups( wordGroups.get( nextWord++));
 
-        if( wordFile.isPresent() && options.isInteractive())
+        if( options.isInteractive())
           {
-          PrintWriter prompter = new PrintWriter( new OutputStreamWriter( System.out), true);
-          BufferedReader reader = new BufferedReader( new InputStreamReader( System.in));
-
-          boolean showMore = true;
-          while( showMore)
+          if( !wordFile.isPresent())
             {
-            prompter.print( "\nNext guess? ");
-            prompter.flush();
+            System.err.println();
+            System.err.println( "Warning: Can't use interactive mode when reading words from standard input.");
+            }
+          else
+            {
+            PrintWriter prompter = new PrintWriter( new OutputStreamWriter( System.out), true);
+            BufferedReader reader = new BufferedReader( new InputStreamReader( System.in));
 
-            String nextGuess =
-              Optional.ofNullable( reader.readLine())
-              .map( String::trim)
-              .filter( guess -> !guess.equalsIgnoreCase( "q"))
-              .orElse( null);
+            boolean showMore = true;
+            while( showMore)
+              {
+              prompter.print( "\nNext guess? ");
+              prompter.flush();
 
-            if( nextGuess == null || (nextGuess.isEmpty() && nextWord >= wordGroups.size()))
-              {
-              showMore = false;
+              String nextGuess =
+                Optional.ofNullable( reader.readLine())
+                .map( String::trim)
+                .filter( guess -> !guess.equalsIgnoreCase( "q"))
+                .orElse( null);
+
+              if( nextGuess == null || (nextGuess.isEmpty() && nextWord >= wordGroups.size()))
+                {
+                showMore = false;
+                }
+              else if( nextGuess.isEmpty())
+                {
+                wordles.printWordPatternGroups( wordGroups.get( nextWord++));
+                }
+              else
+                {
+                wordles.printWordPatternGroups( nextGuess);
+                } 
               }
-            else if( nextGuess.isEmpty())
-              {
-              wordles.printWordPatternGroups( wordGroups.get( nextWord++));
-              }
-            else
-              {
-              wordles.printWordPatternGroups( nextGuess);
-              } 
             }
           }
         }
