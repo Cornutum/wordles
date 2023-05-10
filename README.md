@@ -66,7 +66,7 @@ This means that, assuming these are all of the possible matching words, the best
 "BADLY". Why? Because even if you're wrong, you should be able to get the answer on your next guess. That's because Wordle will
 show you a different set of clues for each of the other words.  Even if your next guess is wrong, your chances of finding the
 solution are the same, no matter which clues you see. In other words, the variance in the size of all the possible matching
-groups is 0.00.
+groups is 0.000.
 
 `wordles` shows you a simple text representation of the green, yellow, and white squares that the Wordle game displays as
 clues. For example, if you guess "BADLY" but the actual target word is "LAUGH", Wordle will display
