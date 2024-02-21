@@ -69,9 +69,7 @@ solution are the same, no matter which clues you see. In other words, the varian
 groups is 0.000.
 
 `wordles` shows you a simple text representation of the green, yellow, and white squares that the Wordle game displays as
-clues. For example, if you guess "BADLY" but the actual target word is "LAUGH", Wordle will display
-:white_large_square::green_square::white_large_square::yellow_square::white_large_square:, which is shown by `wordles` as
-".G.y.".
+clues. For example, if you guess "BADLY" but the actual target word is "LAUGH", Wordle will display :white_large_square: :green_square: :white_large_square: :yellow_square: :white_large_square:, which is shown by `wordles` as ".G.y.".
 
 ### Show the results for all words ###
 
