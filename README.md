@@ -69,7 +69,13 @@ solution are the same, no matter which clues you see. In other words, the varian
 groups is 0.000.
 
 `wordles` shows you a simple text representation of the green, yellow, and white squares that the Wordle game displays as
-clues. For example, if you guess "BADLY" but the actual target word is "LAUGH", Wordle will display :white_large_square: :green_square: :white_large_square: :yellow_square: :white_large_square:, which is shown by `wordles` as ".G.y.".
+clues. For example, if you guess "BADLY" but the actual target word is "LAUGH", Wordle will display your guess like this:
+
+|  |
+| --- |
+| :white_large_square: | :green_square: | :white_large_square: | :yellow_square: | :white_large_square: |
+
+With `wordles` this result is shown as ".G.y.".
 
 ### Show the results for all words ###
 
@@ -80,10 +86,14 @@ for all of these words with the following command.
 wordles -a myWords
 ```
 
-`wordles` then prints the results for all words in best-first order. As you can see the worst choice is "COCOA", which has a
-high variance (1.688).  If you guessed "COCOA" and produced a
-:white_large_square::white_large_square::white_large_square::yellow_square: result, it would probably take two or three more
-guesses to find the answer!
+`wordles` then prints the results for all words in best-first order. As you can see below, the worst choice is "COCOA", which has a
+high variance (1.688).  For example, what if you guess "COCOA" and produce the result below?
+
+|  |
+| --- |
+| :white_large_square: | :white_large_square: | :white_large_square: | :white_large_square: | :yellow_square: |
+
+Bummer. Now it will probably take two or three more guesses to find the answer.
 
 ```
 BADLY (0.000)
