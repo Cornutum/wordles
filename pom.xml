@@ -7,7 +7,7 @@
     <groupId>org.cornutum.wordle</groupId>
     <artifactId>wordles</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <name>Wordles</name>
     <description>Analyzes Wordle word choices</description>
