@@ -349,7 +349,14 @@ public class Wordles
               }
             else
               {
-              wordles.printWordPatternGroups( nextGuess);
+              try
+                {
+                wordles.printWordPatternGroups( guessWord( nextGuess));
+                }
+              catch( IllegalArgumentException e)
+                {
+                prompter.println( String.format( "%s. Try again.", e.getMessage()));
+                }
               } 
             }
           }
@@ -446,21 +453,29 @@ public class Wordles
         {
         if( !nextWord.isEmpty())
           {
-          if( nextWord.length() != 5)
-            {
-            throw new IllegalArgumentException( String.format( "'%s' is not a 5-letter word", nextWord));
-            }
-          if( !IntStream.range( 0, 5).map( i -> (int) nextWord.charAt( i)).allMatch( Character::isAlphabetic))
-            {
-            throw new IllegalArgumentException( String.format( "'%s' contains non-alphabetic chars", nextWord));
-            }
-          
-          words.add( nextWord.toUpperCase());
+          words.add( guessWord( nextWord));
           }
         }
       }
     
     return words;
+    }
+
+  /**
+   * Returns the nominal form of the given guess word. Throws an exception if this is not a valid guess word.
+   */
+  private static String guessWord( String word)
+    {
+    if( word.length() != 5)
+      {
+      throw new IllegalArgumentException( String.format( "'%s' is not a 5-letter word", word));
+      }
+    if( !IntStream.range( 0, 5).map( i -> (int) word.charAt( i)).allMatch( Character::isAlphabetic))
+      {
+      throw new IllegalArgumentException( String.format( "'%s' contains non-alphabetic chars", word));
+      }
+          
+    return word.toUpperCase();
     }
 
   /**
