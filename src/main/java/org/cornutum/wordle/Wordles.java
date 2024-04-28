@@ -301,11 +301,19 @@ public class Wordles
   public static void run( Options options) throws Exception
     {
     Optional<File> wordFile = Optional.ofNullable( options.getWordFile());
-    Wordles wordles = new Wordles( readWords( wordFile));
-    List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups();
-    if( !wordGroups.isEmpty())
+    if( options.isInteractive() && !wordFile.isPresent())
       {
-      if( options.isPrintAll())
+      System.err.println( "Can't use interactive mode when reading words from standard input");
+      }
+    else
+      {
+      Wordles wordles = new Wordles( readWords( wordFile));
+      List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups();
+      if( wordGroups.isEmpty())
+        {
+        System.err.println( "No words entered");
+        }
+      else if( options.isPrintAll())
         {
         wordGroups.stream().forEach( wordGroup -> wordles.printWordPatternGroups( wordGroup));
         }
@@ -316,41 +324,33 @@ public class Wordles
 
         if( options.isInteractive())
           {
-          if( !wordFile.isPresent())
-            {
-            System.err.println();
-            System.err.println( "Warning: Can't use interactive mode when reading words from standard input.");
-            }
-          else
-            {
-            PrintWriter prompter = new PrintWriter( new OutputStreamWriter( System.out), true);
-            BufferedReader reader = new BufferedReader( new InputStreamReader( System.in));
+          PrintWriter prompter = new PrintWriter( new OutputStreamWriter( System.out), true);
+          BufferedReader reader = new BufferedReader( new InputStreamReader( System.in));
 
-            boolean showMore = true;
-            while( showMore)
+          boolean showMore = true;
+          while( showMore)
+            {
+            prompter.print( "\nNext guess? ");
+            prompter.flush();
+
+            String nextGuess =
+              Optional.ofNullable( reader.readLine())
+              .map( String::trim)
+              .filter( guess -> !guess.equalsIgnoreCase( "q"))
+              .orElse( null);
+
+            if( nextGuess == null || (nextGuess.isEmpty() && nextWord >= wordGroups.size()))
               {
-              prompter.print( "\nNext guess? ");
-              prompter.flush();
-
-              String nextGuess =
-                Optional.ofNullable( reader.readLine())
-                .map( String::trim)
-                .filter( guess -> !guess.equalsIgnoreCase( "q"))
-                .orElse( null);
-
-              if( nextGuess == null || (nextGuess.isEmpty() && nextWord >= wordGroups.size()))
-                {
-                showMore = false;
-                }
-              else if( nextGuess.isEmpty())
-                {
-                wordles.printWordPatternGroups( wordGroups.get( nextWord++));
-                }
-              else
-                {
-                wordles.printWordPatternGroups( nextGuess);
-                } 
+              showMore = false;
               }
+            else if( nextGuess.isEmpty())
+              {
+              wordles.printWordPatternGroups( wordGroups.get( nextWord++));
+              }
+            else
+              {
+              wordles.printWordPatternGroups( nextGuess);
+              } 
             }
           }
         }
