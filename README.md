@@ -121,10 +121,13 @@ COCOA (1.688)
 ### Show results interactively ###
 
 If you run `wordles` in interactive mode, you can enter any five-letter word you like and see its results when compared with the
-input word list. To see the next best choice from the input word list, just enter an empty word. To exit interactive mode, enter
-"q".
+input word list. This can be helpful in a situation where the best guess to quickly narrow the possibilities might be a word
+that you know can't possibly be a match.
 
-You can use interactive mode only if the words come from a file. For example, try this command:
+To see the next best choice from the input word list, just enter an empty word. To exit interactive mode, enter
+"q". You can use interactive mode only if the words come from a file.
+
+For example, try this command:
 
 ```bash
 wordles -i myWords
