@@ -94,6 +94,22 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
     }
 
   /**
+   * Returns the number of pattern groups.
+   */
+  public int getSize()
+    {
+    return getGroups().size();
+    }
+
+  /**
+   * Returns the number of words in the largests pattern group.
+   */
+  public int getMax()
+    {
+    return getGroups().values().stream().mapToInt( Set::size).max().orElse( 0);
+    }
+
+  /**
    * Returns the variance in group size for all patterns.
    */
   public Float getVariance()
@@ -116,8 +132,8 @@ public class WordPatternGroups implements Comparable<WordPatternGroups>
   private final String guess_;
   private final Map<WordPattern,Set<String>> groups_;
 
-  private static final Comparator<WordPatternGroups> bySize = Comparator.comparing( wpg -> wpg.getGroups().size());
+  private static final Comparator<WordPatternGroups> bySize = Comparator.comparing( wpg -> wpg.getSize());
   private static final Comparator<WordPatternGroups> byVariance = Comparator.comparing( wpg -> wpg.getVariance());
-  private static final Comparator<WordPatternGroups> byMaxGroup = Comparator.comparing( wpg -> wpg.getGroups().values().stream().mapToInt( Set::size).max().orElse(0));
+  private static final Comparator<WordPatternGroups> byMaxGroup = Comparator.comparing( wpg -> wpg.getMax());
   private static final Comparator<WordPatternGroups> byGuess = Comparator.comparing( wpg -> wpg.getGuess());
   }
