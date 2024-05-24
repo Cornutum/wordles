@@ -129,7 +129,8 @@ public class Wordles
                "Each guess word is analyzed by comparing it to all of the other input words, assuming the",
                "other word is the actual Wordle target. The resulting matching clues are then used to",
                "organize all of the input words into groups. Printed results show all of the matching",
-               "groups, along with the variance in group size, which is used in the ranking.",
+               "groups, along with statistics used to determine the rank of this guess word: the number",
+               "of groups, the maximum group size, and the variance in group size.",
                "",
                "Each option is one of the following:",
                "",
@@ -387,9 +388,12 @@ public class Wordles
     {
     PrintWriter writer = new PrintWriter( stream, true);
     writer.println();
-    writer.println();
-    writer.println( String.format( "%s (%.3f)", patternGroups.getGuess(), patternGroups.getVariance()));
-    writer.println( "----------------");
+    writer.println(
+      String.format(
+        "%s %20s",
+        patternGroups.getGuess(),
+        String.format( "[ %d | %d | %.3f ]", patternGroups.getSize(), patternGroups.getMax(), patternGroups.getVariance())));
+    writer.println( "--------------------------");
     patternGroups.getGroups().entrySet().stream()
       .sorted( (e1, e2) -> e2.getValue().size() - e1.getValue().size())
       .forEach( e -> {
