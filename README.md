@@ -2,8 +2,8 @@
 
 ## What's New? ##
 
-  * The latest version ([1.0.2](https://github.com/Cornutum/wordles/releases/tag/release-1.0.2))
-    is now available at the [Maven Central Repository](https://central.sonatype.com/artifact/org.cornutum.wordle/wordles/1.0.2/versions).
+  * The latest version ([1.0.3](https://github.com/Cornutum/wordles/releases/tag/release-1.0.3))
+    is now available at the [Maven Central Repository](https://central.sonatype.com/artifact/org.cornutum.wordle/wordles/1.0.3/versions).
 
   * For details on how to download and install the `wordles` command line interface, see [_How do I get it?_](#how-do-i-get-it).
 
@@ -18,7 +18,8 @@ best chance to find the solution before you run out of tries. Easy, if you use `
 Given a list of words, `wordles` will analyze the possible results and rank these words in order of preference. Each word
 is analyzed by comparing it to all of the other input words, assuming that the other word is the actual Wordle target. The resulting
 matching clues are then used to organize all of the input words into groups. Printed results show all of the matching groups,
-along with the variance in group size, which is used in the ranking.
+along with statistics used to determine the rank of this guess word: the number
+of groups, the maximum group size, and the variance in group size.
 
 
 ## How does it work? ##
@@ -37,8 +38,8 @@ echo "abuzz badly cocoa dogma gaudy laugh macho" | wordles
 `wordles` then prints the result for the best guess word to standard output:
 
 ```
-BADLY (0.000)
-----------------
+BADLY    [ 7 | 1 | 0.000 ]
+--------------------------
 
   .yy..
     DOGMA
@@ -64,7 +65,7 @@ BADLY (0.000)
 
 This means that, assuming these are all of the possible matching words, the best choice for your next guess should be
 "BADLY". Why? Because even if you're wrong, you should be able to get the answer on your next guess. That's because Wordle will
-show you a different set of clues for each of the other words.  Even if your next guess is wrong, your chances of finding the
+show you a different set of clues for each of these seven words.  Even if your next guess is wrong, your chances of finding the
 solution are the same, no matter which clues you see. In other words, the variance in the size of all the possible matching
 groups is 0.000.
 
@@ -89,18 +90,18 @@ high variance (1.688).  For example, what if you guess "COCOA" and produce the r
 
  :white_large_square:  :white_large_square:  :white_large_square:  :white_large_square:  :yellow_square: 
 
-Bummer. Now it will probably take two or three more guesses to find the answer.
+Bummer. There are four different words that match these clues. Now it will take an average of 2.5 more guesses to find the answer.
 
 ```
-BADLY (0.000)
-----------------
+BADLY    [ 7 | 1 | 0.000 ]
+--------------------------
 
   .yy..
     DOGMA
 ...
 
-COCOA (1.688)
-----------------
+COCOA    [ 4 | 4 | 1.688 ]
+--------------------------
 
   ....y
     ABUZZ
@@ -136,8 +137,8 @@ wordles -i myWords
 Then you'll see something like this:
 
 ```
-BADLY (0.000)
-----------------
+BADLY    [ 7 | 1 | 0.000 ]
+--------------------------
 
   .yy..
     DOGMA
@@ -146,8 +147,8 @@ BADLY (0.000)
 Next guess? macho
 
 
-MACHO (0.139)
-----------------
+MACHO    [ 6 | 2 | 0.139 ]
+--------------------------
 
   .G...
     BADLY
@@ -157,8 +158,8 @@ MACHO (0.139)
 Next guess? elbow
 
 
-ELBOW (0.139)
-----------------
+ELBOW    [ 6 | 2 | 0.139 ]
+--------------------------
 
   ...y.
     DOGMA
@@ -168,8 +169,8 @@ ELBOW (0.139)
 Next guess? 
 
 
-DOGMA (0.000)
-----------------
+DOGMA    [ 7 | 1 | 0.000 ]
+--------------------------
 
   y.y.y
     GAUDY
@@ -183,7 +184,7 @@ Next guess? q
 
 To get the command line version of `wordles`, download the `wordles` shell distribution file from the Maven Central Repository, using the following procedure.
 
-  1. Visit the [Central Repository page](https://central.sonatype.com/artifact/org.cornutum.wordle/wordles/1.0.2/versions) for `wordles`.
+  1. Visit the [Central Repository page](https://central.sonatype.com/artifact/org.cornutum.wordle/wordles/1.0.3/versions) for `wordles`.
   1. Find the entry for the latest version and click on "Browse".
   1. To download the shell distribution ZIP file, click on "wordles-_${version}_.zip". If you prefer a compressed TAR file, click on "wordles-_${version}_.tar.gz".
 
