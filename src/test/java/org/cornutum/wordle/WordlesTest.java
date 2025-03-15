@@ -28,7 +28,10 @@ public class WordlesTest extends BaseTest
     Wordles wordles = new Wordles( words);
 
     // When...
-    List<WordPatternGroups> patternGroups = wordles.getWordPatternGroups();
+    List<WordPatternGroups> patternGroups =
+      Wordles.ranked(
+        wordles.getWordPatternGroups(),
+        Rankings.byCombined);
 
     // Then...
     List<String> guesses = patternGroups.stream().map( WordPatternGroups::getGuess).collect( toList());
