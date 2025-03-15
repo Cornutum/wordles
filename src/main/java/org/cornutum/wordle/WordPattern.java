@@ -11,6 +11,7 @@ import static org.cornutum.wordle.Clue.*;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,14 +24,36 @@ import static java.util.stream.Collectors.toList;
 /**
  * Defines matching pattern for a given guess.
  */
-public class WordPattern
+public class WordPattern implements Comparable<WordPattern>
   {
   /**
    * Creates a new WordPattern instance.
    */
-  private WordPattern( List<Clue> clues)
+  public WordPattern( List<Clue> clues)
     {
-    clues_ = clues;
+    clues_ =
+      Optional.ofNullable( clues)
+      .filter( list -> list.size() == 5)
+      .orElseThrow( () -> new IllegalArgumentException( "A WordPattern must contain exactly 5 clues."));
+    }
+
+  /**
+   * Creates a new WordPattern instance.
+   */
+  public WordPattern( Clue... clues)
+    {
+    this( Arrays.asList( clues));
+    }
+
+  /**
+   * Creates a new WordPattern instance.
+   */
+  public WordPattern( String clues)
+    {
+    this(
+      IntStream.range( 0, Optional.ofNullable( clues).map( String::length).orElse( 0))
+      .mapToObj( i -> Clue.valueOf( clues.charAt( i)))
+      .collect( toList()));
     }
 
   /**
@@ -85,6 +108,15 @@ public class WordPattern
     return new WordPattern( Arrays.asList( clues));
     }
 
+  /**
+   * Compares {@link WordPattern} instances.
+   */
+  public int compareTo( WordPattern other)
+    {
+    return byClues_.compare( this, other);
+                      
+    }
+
   public boolean equals( Object object)
     {
     WordPattern other =
@@ -122,4 +154,19 @@ public class WordPattern
     }
 
   private final List<Clue> clues_;
+
+  protected static final Comparator<WordPattern> byClues_ =
+    byClue( 0)
+    .thenComparing( byClue( 1))
+    .thenComparing( byClue( 2))
+    .thenComparing( byClue( 3))
+    .thenComparing( byClue( 4));
+
+  private static Comparator<WordPattern> byClue( int index)
+    {
+    return
+      Comparator.comparing(
+        wp -> wp.clues_.get( index),
+        Comparator.comparingInt( Clue::getRank));
+    }
   }
