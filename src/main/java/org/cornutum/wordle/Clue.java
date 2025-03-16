@@ -14,13 +14,14 @@ import java.util.Optional;
  */
 public enum Clue
   {
-    GREEN( "G"),
-    YELLOW( "y"),
-    WHITE( ".");
+    GREEN( "G", 0),
+    YELLOW( "y", 1),
+    WHITE( ".", 2);
 
-    Clue( String text)
+    Clue( String text, int rank)
       {
       text_ = text;
+      rank_ = rank;
       }
 
     public String toString()
@@ -46,5 +47,11 @@ public enum Clue
         .orElseThrow( () -> new IllegalArgumentException( String.format( "'%s' is not a valid Clue", c)));
       }
 
+    public int getRank()
+      {
+      return rank_;
+      }
+
     private final String text_;
+    private final int rank_;
   }

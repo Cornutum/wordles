@@ -7,6 +7,8 @@
 
 package org.cornutum.wordle;
 
+import static org.cornutum.wordle.Rankings.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,10 +18,14 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -309,7 +315,11 @@ public class Wordles
     else
       {
       Wordles wordles = new Wordles( readWords( wordFile));
-      List<WordPatternGroups> wordGroups = wordles.getWordPatternGroups();
+      List<WordPatternGroups> wordGroups =
+        ranked(
+          wordles.getWordPatternGroups(),
+          byCombined);
+      
       if( wordGroups.isEmpty())
         {
         System.err.println( "No words entered");
@@ -395,7 +405,7 @@ public class Wordles
         String.format( "[ %d | %d | %.3f ]", patternGroups.getSize(), patternGroups.getMax(), patternGroups.getVariance())));
     writer.println( "--------------------------");
     patternGroups.getGroups().entrySet().stream()
-      .sorted( (e1, e2) -> e2.getValue().size() - e1.getValue().size())
+      .sorted( groupPrintOrder_)
       .forEach( e -> {
         writer.println();
         writer.println( String.format( "  %s", e.getKey()));
@@ -414,7 +424,6 @@ public class Wordles
     return
       getWords().stream()
       .map( word -> getWordPatternGroups( word))
-      .sorted()
       .collect( toList());
     }
 
@@ -431,6 +440,15 @@ public class Wordles
       }
     
     return groups;
+    }
+
+  /**
+   * Returns the word pattern groups ranked by the given comparator.
+   */
+  protected static List<WordPatternGroups> ranked( List<WordPatternGroups> wordGroups, Comparator<WordPatternGroups> comparator)
+    {
+    sort( wordGroups, comparator);
+    return wordGroups;
     }
 
   /**
@@ -495,4 +513,9 @@ public class Wordles
     }
 
   private final List<String> words_;
+
+  private static final Comparator<Map.Entry<WordPattern,Set<String>>> groupPrintOrder_ =
+    Comparator.comparingInt( ( Map.Entry<WordPattern,Set<String>> e) -> e.getValue().size())
+    .reversed()
+    .thenComparing( (Map.Entry<WordPattern,Set<String>> e) -> e.getKey());
   }
