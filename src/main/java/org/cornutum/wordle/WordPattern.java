@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.reverseOrder;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -113,7 +114,7 @@ public class WordPattern implements Comparable<WordPattern>
    */
   public int compareTo( WordPattern other)
     {
-    return byClues_.compare( this, other);
+    return patternComparator_.compare( this, other);
                       
     }
 
@@ -155,7 +156,7 @@ public class WordPattern implements Comparable<WordPattern>
 
   private final List<Clue> clues_;
 
-  protected static final Comparator<WordPattern> byClues_ =
+  private static final Comparator<WordPattern> byClues_ =
     byClue( 0)
     .thenComparing( byClue( 1))
     .thenComparing( byClue( 2))
@@ -169,4 +170,23 @@ public class WordPattern implements Comparable<WordPattern>
         wp -> wp.clues_.get( index),
         Comparator.comparingInt( Clue::getRank));
     }
+  
+  private static final Comparator<WordPattern> byClueCounts_ =
+    byClueCount( GREEN)
+    .thenComparing( byClueCount( YELLOW))
+    .thenComparing( byClueCount( WHITE));
+
+  private static Comparator<WordPattern> byClueCount( Clue clue)
+    {
+    return reverseOrder( Comparator.comparingInt( wp -> wp.clueCount( clue)));
+    }
+
+  private int clueCount( Clue clue)
+    {
+    return (int) clues_.stream().filter( c -> c == clue).count();
+    }
+
+  private static final Comparator<WordPattern> patternComparator_ =
+    byClueCounts_
+    .thenComparing( byClues_);
   }
