@@ -29,7 +29,7 @@ public class WordlesTest extends BaseTest
 
     // When...
     List<WordPatternGroups> patternGroups =
-      Wordles.ranked(
+      Rankings.ranked(
         wordles.getWordPatternGroups(),
         Rankings.byCombined);
 

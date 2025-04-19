@@ -8,7 +8,9 @@
 package org.cornutum.wordle;
 
 import java.util.Comparator;
+import java.util.List;
 import static java.util.Collections.reverseOrder;
+import static java.util.Collections.sort;
 
 /**
  * Defines various methods of ranking {@link WordPatternGroups}
@@ -52,4 +54,13 @@ public final class Rankings
     .thenComparing( byMaxGroup)
     .thenComparing( byGuess);
 
+
+  /**
+   * Returns the given elements ranked by the given comparator.
+   */
+  public static <T> List<T> ranked( List<T> elements, Comparator<T> comparator)
+    {
+    sort( elements, comparator);
+    return elements;
+    }
   }

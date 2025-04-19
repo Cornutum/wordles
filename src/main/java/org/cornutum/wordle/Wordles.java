@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.IntStream;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -440,15 +439,6 @@ public class Wordles
       }
     
     return groups;
-    }
-
-  /**
-   * Returns the word pattern groups ranked by the given comparator.
-   */
-  protected static List<WordPatternGroups> ranked( List<WordPatternGroups> wordGroups, Comparator<WordPatternGroups> comparator)
-    {
-    sort( wordGroups, comparator);
-    return wordGroups;
     }
 
   /**
