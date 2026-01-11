@@ -22,6 +22,7 @@
       <outputDirectory>bin</outputDirectory>
       <includes>
           <include>wordles</include>
+          <include>wordles.bat</include>
       </includes>
       <fileMode>0755</fileMode>
       <filtered>true</filtered>
