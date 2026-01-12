@@ -2,8 +2,8 @@
 
 ## What's New? ##
 
-  * The latest version ([1.0.4](https://github.com/Cornutum/wordles/releases/tag/release-1.0.4))
-    is now available at the [Maven Central Repository](https://central.sonatype.com/artifact/org.cornutum.wordle/wordles/1.0.4/versions).
+  * The latest version ([1.0.5](https://github.com/Cornutum/wordles/releases/tag/release-1.0.5))
+    is now available at the [Maven Central Repository](https://central.sonatype.com/artifact/org.cornutum.wordle/wordles/1.0.5/versions).
 
   * For details on how to download and install the `wordles` command line interface, see [_How do I get it?_](#how-do-i-get-it).
 
@@ -24,7 +24,7 @@ of groups, the maximum group size, and the variance in group size.
 
 ## How does it work? ##
 
-`wordles` has a simple command line interface that you can run from a Unix shell. For details on how to download and install the `wordles` command,
+`wordles` has a simple command line interface that you can run from a Unix shell or a Windows Command Prompt. For details on how to download and install the `wordles` command,
 see [_How do I get it?_](#how-do-i-get-it).
 
 ### Show the best word ###
@@ -184,7 +184,7 @@ Next guess? q
 
 To get the command line version of `wordles`, download the `wordles` shell distribution file from the Maven Central Repository, using the following procedure.
 
-  1. Visit the [Central Repository page](https://central.sonatype.com/artifact/org.cornutum.wordle/wordles/1.0.4/versions) for `wordles`.
+  1. Visit the [Central Repository page](https://central.sonatype.com/artifact/org.cornutum.wordle/wordles/1.0.5/versions) for `wordles`.
   1. Find the entry for the latest version and click on "Browse".
   1. To download the shell distribution ZIP file, click on "wordles-_${version}_.zip". If you prefer a compressed TAR file, click on "wordles-_${version}_.tar.gz".
 
